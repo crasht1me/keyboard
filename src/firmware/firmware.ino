@@ -1,24 +1,34 @@
+const byte NUM_ROWS = 4;
+const byte NUM_COLS = 12;
 
-int pin_col1 = 2;
-int pin_row1 = 6;
+byte row_pins[NUM_ROWS] = {A0, A1, A2, A3};
+byte col_pins[NUM_COLS] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 14, 15};
 
 
-// the setup function runs once when you press reset or power the board
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
 }
 
 // the loop function runs over and over again forever
 void loop() {
-  pinMode(pin_row1, INPUT_PULLUP);
-
-  pinMode(pin_col1, OUTPUT);
-  digitalWrite(pin_col1, LOW);
-  if (digitalRead(pin_row1)) {
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(1000);                       // wait for a second
-    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  for (byte col = 0; col < NUM_COLS; col++) {
+    pinMode(col_pins[col], INPUT_PULLUP);  
   }
-  digitalWrite(pin_col1, HIGH);
-  pinMode(pin_col1, INPUT);
+
+  for (byte row = 0; row < NUM_ROWS; row++) {
+    pinMode(row_pins[row], OUTPUT);
+    digitalWrite(row_pins[row], LOW);
+
+    for (byte col = 0; col < NUM_COLS; col++) {
+      // reading low at the column means key is pressed
+      bool is_pressed = !digitalRead(col_pins[col]);
+      if (is_pressed) {
+        Serial.println("pressed: R" + String(row) + " C" + String(col));
+      }
+    }
+    // return the row to high
+    digitalWrite(row_pins[row], HIGH);
+    // stop treating as output
+    pinMode(row_pins[row], INPUT);
+  }
 }
