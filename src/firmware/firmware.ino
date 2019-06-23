@@ -26,7 +26,7 @@
 #define K_EQU 0x3D //=
 #define K_OSB 0x5B //[
 #define K_CSB 0x5D //]
-#define K_USC 0x5F //_
+#define K_MIN 0x2D //-
 #define K_OCB 0x7B //{
 #define K_CCB 0x7D //}
 #define KEY_A 0x61
@@ -80,7 +80,7 @@ byte row_pins[NUM_ROWS] = {A0, A1, A2, A3};
 byte col_pins[NUM_COLS] = {2, 3, 4, 5, 6, 7, 8, 9, 15, 14, 16, 10};
 
 byte layout[NUM_ROWS][NUM_COLS] = {
-  {K_TAB, KEY_Q, KEY_W, KEY_F, KEY_P, KEY_B, KEY_J, KEY_L, KEY_U, KEY_Y, K_USC, K_BKS},
+  {K_TAB, KEY_Q, KEY_W, KEY_F, KEY_P, KEY_B, KEY_J, KEY_L, KEY_U, KEY_Y, K_MIN, K_BKS},
   {K_ESC, KEY_A, KEY_R, KEY_S, KEY_T, KEY_G, KEY_K, KEY_N, KEY_E, KEY_I, KEY_O, K_ETR},
   {K_S_L, KEY_Z, KEY_X, KEY_C, KEY_V, KEY_D, KEY_M, KEY_H, K_CMA, K_DOT, K_DQO, K_S_R},
   {K_C_L, K_G_L, K_A_L, LOWER, HIGHR, K_SPC, K_OPR, K_CPR, K_OCB, K_CCB, K_FSL, K_EQU}
@@ -129,4 +129,6 @@ void loop() {
     // stop treating as output
     pinMode(row_pins[row], INPUT);
   }
+
+  delay(10);
 }
