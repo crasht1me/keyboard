@@ -14,21 +14,27 @@
 
 #include <Keyboard.h>
 
+// symbols
 #define K_SPC 0x20
-#define K_DQO 0x22
-#define K_FSL 0x2F
+#define K_DQO 0x22 //"
+#define K_SQO 0x27 //' !!!
 #define K_OPR 0x28 //(
 #define K_CPR 0x29 //)
 #define K_CMA 0x2C
+#define K_MIN 0x2D //-
 #define K_DOT 0x2E
+#define K_FSL 0x2F //forward slash
 #define K_FCL 0x3A //:
 #define K_SCL 0x3B //;
 #define K_EQU 0x3D //=
 #define K_OSB 0x5B //[
 #define K_CSB 0x5D //]
-#define K_MIN 0x2D //-
+#define K_BSL 0x5C //backslash !!!
 #define K_OCB 0x7B //{
 #define K_CCB 0x7D //}
+#define K_BTK 0x60 //` !!!
+
+// letters
 #define KEY_A 0x61
 #define KEY_B 0x62
 #define KEY_C 0x63
@@ -56,6 +62,7 @@
 #define KEY_Y 0x79
 #define KEY_Z 0x7A
 
+// modifiers
 #define K_C_L 0x80
 #define K_S_L 0x81
 #define K_A_L 0x82
@@ -65,10 +72,11 @@
 #define K_A_R 0x86
 #define K_G_R 0x87
 
+// non-printable
 #define K_ETR 0xB0
+#define K_ESC 0xB1
 #define K_BKS 0xB2
 #define K_TAB 0xB3
-#define K_ESC 0xB1
 
 #define LOWER 0x00
 #define HIGHR 0x00
@@ -112,7 +120,19 @@ void loop() {
     for (byte col = 0; col < NUM_COLS; col++) {
       // reading low at the column means key is pressed
       bool is_pressed = !digitalRead(col_pins[col]);
-      if (is_pressed) {
+      process_key(is_pressed, row, col);
+    }
+    // return the row to high
+    digitalWrite(row_pins[row], HIGH);
+    // stop treating as output
+    pinMode(row_pins[row], INPUT);
+  }
+
+  delay(10);
+}
+
+void process_key(bool is_pressed, byte row, byte col) {
+  if (is_pressed) {
         if (!pressed_switches[row][col]) {
           pressed_switches[row][col] = true;
           Keyboard.press(layout[row][col]);
@@ -123,12 +143,4 @@ void loop() {
           Keyboard.release(layout[row][col]);
         }
       }
-    }
-    // return the row to high
-    digitalWrite(row_pins[row], HIGH);
-    // stop treating as output
-    pinMode(row_pins[row], INPUT);
-  }
-
-  delay(10);
 }
