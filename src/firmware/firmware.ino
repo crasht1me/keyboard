@@ -1,38 +1,23 @@
-/*#define KEY_A 0x04
-#define KEY_B 0x05
-#define KEY_C 0x06
-#define KEY_D 0x07
-#define KEY_E 0x08
-#define KEY_F 0x09
-#define KEY_G 0x0A
-#define KEY_H 0x0B
-#define KEY_I 0x0C
-#define KEY_J 0x0D
-#define KEY_K 0x0E
-#define KEY_L 0x0F
-#define KEY_SHIFT_L 0x81 */
-
 #include <Keyboard.h>
 
 // symbols
 #define K_SPC 0x20
 #define K_DQO 0x22 //"
-#define K_SQO 0x27 //' !!!
+#define K_SQO 0x27 //'
 #define K_OPR 0x28 //(
 #define K_CPR 0x29 //)
 #define K_CMA 0x2C
 #define K_MIN 0x2D //-
 #define K_DOT 0x2E
 #define K_FSL 0x2F //forward slash
-#define K_FCL 0x3A //:
 #define K_SCL 0x3B //;
 #define K_EQU 0x3D //=
 #define K_OSB 0x5B //[
 #define K_CSB 0x5D //]
-#define K_BSL 0x5C //backslash !!!
+#define K_BSL 0x5C //backslash
 #define K_OCB 0x7B //{
 #define K_CCB 0x7D //}
-#define K_BTK 0x60 //` !!!
+#define K_BTK 0x60 //`backtick
 
 // letters
 #define KEY_A 0x61
@@ -62,6 +47,18 @@
 #define KEY_Y 0x79
 #define KEY_Z 0x7A
 
+// digits
+#define KEY_0 0x30
+#define KEY_1 0x31
+#define KEY_2 0x32
+#define KEY_3 0x33
+#define KEY_4 0x34
+#define KEY_5 0x35
+#define KEY_6 0x36
+#define KEY_7 0x37
+#define KEY_8 0x38
+#define KEY_9 0x39
+
 // modifiers
 #define K_C_L 0x80
 #define K_S_L 0x81
@@ -77,21 +74,39 @@
 #define K_ESC 0xB1
 #define K_BKS 0xB2
 #define K_TAB 0xB3
+#define K_RHT 0xD7
+#define K_LFT 0xD8
+#define K_DWN 0xD9
+#define K_AUP 0xDA
+#define K_CPS 0xC1
 
-#define LOWER 0x00
-#define HIGHR 0x00
+// meta
+#define K_NON 0x00
+#define FIRST_META_KEY 0xF0
+#define HIGHR 0xFF
 
 const byte NUM_ROWS = 4;
 const byte NUM_COLS = 12;
+const byte NUM_LAYOUT_LEVELS = 2;
+byte layout_level = 0;
 
 byte row_pins[NUM_ROWS] = {A0, A1, A2, A3};
 byte col_pins[NUM_COLS] = {2, 3, 4, 5, 6, 7, 8, 9, 15, 14, 16, 10};
 
-byte layout[NUM_ROWS][NUM_COLS] = {
-  {K_TAB, KEY_Q, KEY_W, KEY_F, KEY_P, KEY_B, KEY_J, KEY_L, KEY_U, KEY_Y, K_MIN, K_BKS},
-  {K_ESC, KEY_A, KEY_R, KEY_S, KEY_T, KEY_G, KEY_K, KEY_N, KEY_E, KEY_I, KEY_O, K_ETR},
-  {K_S_L, KEY_Z, KEY_X, KEY_C, KEY_V, KEY_D, KEY_M, KEY_H, K_CMA, K_DOT, K_DQO, K_S_R},
-  {K_C_L, K_G_L, K_A_L, LOWER, HIGHR, K_SPC, K_OPR, K_CPR, K_OCB, K_CCB, K_FSL, K_EQU}
+byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
+
+  {
+    {K_TAB, KEY_Q, KEY_W, KEY_F, KEY_P, KEY_B, KEY_J, KEY_L, KEY_U, KEY_Y, K_MIN, K_BKS},
+    {K_ESC, KEY_A, KEY_R, KEY_S, KEY_T, KEY_G, KEY_K, KEY_N, KEY_E, KEY_I, KEY_O, K_ETR},
+    {K_S_L, KEY_Z, KEY_X, KEY_C, KEY_V, KEY_D, KEY_M, KEY_H, K_CMA, K_DOT, K_DQO, K_S_R},
+    {K_C_L, K_SCL, K_G_L, K_A_L, HIGHR, K_SPC, K_OPR, K_CPR, K_OCB, K_CCB, K_EQU, K_FSL}
+  },
+  {
+    {K_BTK, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
+    {K_ESC, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
+    {K_S_L, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
+    {K_C_L, K_SCL, K_G_L, K_A_L, HIGHR, K_NON, K_NON, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
+  }
 };
 
 bool pressed_switches[NUM_ROWS][NUM_COLS] = {
@@ -101,13 +116,24 @@ bool pressed_switches[NUM_ROWS][NUM_COLS] = {
   {false, false, false, false, false, false, false, false, false, false, false, false}
 };
 
+bool key_states[NUM_ROWS][NUM_COLS] = {
+  {false, false, false, false, false, false, false, false, false, false, false, false},
+  {false, false, false, false, false, false, false, false, false, false, false, false},
+  {false, false, false, false, false, false, false, false, false, false, false, false},
+  {false, false, false, false, false, false, false, false, false, false, false, false}
+};
 
 void setup() {
   Keyboard.begin();
 }
 
-// the loop function runs over and over again forever
 void loop() {
+  scan_switches();
+  process_keys();
+  delay(12);
+}
+
+void scan_switches() {
   // reinitialise the column pins to allow sharing with other hardware
   for (byte col = 0; col < NUM_COLS; col++) {
     pinMode(col_pins[col], INPUT_PULLUP);
@@ -120,27 +146,69 @@ void loop() {
     for (byte col = 0; col < NUM_COLS; col++) {
       // reading low at the column means key is pressed
       bool is_pressed = !digitalRead(col_pins[col]);
-      process_key(is_pressed, row, col);
+      pressed_switches[row][col] = is_pressed;
     }
     // return the row to high
     digitalWrite(row_pins[row], HIGH);
     // stop treating as output
     pinMode(row_pins[row], INPUT);
   }
-
-  delay(10);
 }
 
-void process_key(bool is_pressed, byte row, byte col) {
-  if (is_pressed) {
-        if (!pressed_switches[row][col]) {
-          pressed_switches[row][col] = true;
-          Keyboard.press(layout[row][col]);
+void process_keys() {
+  for (byte row = 0; row < NUM_ROWS; row++) {
+    for (byte col = 0; col < NUM_COLS; col++) {
+      bool is_pressed_state = pressed_switches[row][col];
+      if (is_pressed_state) {
+        if (!key_states[row][col]) {
+          press_key(row, col);
         }
       } else {
-        if (pressed_switches[row][col]) {
-          pressed_switches[row][col] = false;
-          Keyboard.release(layout[row][col]);
+        if (key_states[row][col]) {
+          release_key(row, col);
         }
       }
+    }
+  }
+}
+
+void press_key(byte row, byte col) {
+  key_states[row][col] = true;
+  bool is_normal_key = get_layout_code(row, col) < FIRST_META_KEY;
+  if (is_normal_key) {
+    Keyboard.press(get_layout_code(row, col));
+  } else {
+    switch (get_layout_code(row, col)) {
+      case HIGHR:
+        Keyboard.releaseAll();
+        layout_level = 1;
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+void release_key(byte row, byte col) {
+  key_states[row][col] = false;
+  bool is_normal_key = get_layout_code(row, col) < FIRST_META_KEY;
+  if (is_normal_key) {
+    Keyboard.release(get_layout_code(row, col));
+  } else {
+    switch (get_layout_code(row, col)) {
+      case HIGHR:
+        Keyboard.releaseAll();
+        layout_level = 0;
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+/*
+ * Get the keycode from the layout array for the current level.
+ */
+byte get_layout_code(byte row, byte col) {
+  return layout[layout_level][row][col];
 }
