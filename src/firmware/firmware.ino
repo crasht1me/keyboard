@@ -85,6 +85,8 @@
 #define FIRST_META_KEY 0xF0
 #define HIGHR 0xFF
 
+#define DEBOUNCE_DELAY 17
+
 const byte NUM_ROWS = 4;
 const byte NUM_COLS = 12;
 const byte NUM_LAYOUT_LEVELS = 2;
@@ -94,18 +96,17 @@ byte row_pins[NUM_ROWS] = {A0, A1, A2, A3};
 byte col_pins[NUM_COLS] = {2, 3, 4, 5, 6, 7, 8, 9, 15, 14, 16, 10};
 
 byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
-
   {
     {K_TAB, KEY_Q, KEY_W, KEY_F, KEY_P, KEY_B, KEY_J, KEY_L, KEY_U, KEY_Y, K_MIN, K_BKS},
     {K_ESC, KEY_A, KEY_R, KEY_S, KEY_T, KEY_G, KEY_K, KEY_N, KEY_E, KEY_I, KEY_O, K_ETR},
     {K_S_L, KEY_Z, KEY_X, KEY_C, KEY_V, KEY_D, KEY_M, KEY_H, K_CMA, K_DOT, K_DQO, K_S_R},
-    {K_C_L, K_SCL, K_G_L, K_A_L, HIGHR, K_SPC, K_OPR, K_CPR, K_OCB, K_CCB, K_EQU, K_FSL}
+    {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, K_SCL, K_OPR, K_OCB, K_OSB, K_EQU, K_FSL}
   },
   {
     {K_BTK, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
     {K_ESC, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
     {K_S_L, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
-    {K_C_L, K_SCL, K_G_L, K_A_L, HIGHR, K_NON, K_NON, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
+    {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, K_NON, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
   }
 };
 
@@ -130,7 +131,7 @@ void setup() {
 void loop() {
   scan_switches();
   process_keys();
-  delay(12);
+  delay(DEBOUNCE_DELAY);
 }
 
 void scan_switches() {
