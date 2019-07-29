@@ -80,6 +80,15 @@
 #define K_DWN 0xD9
 #define K_AUP 0xDA
 #define K_CPS 0xC1
+#define K_INS 0xD1
+#define K_DEL 0xD4
+#define K_HOM 0xD2
+#define K_END 0xD5
+#define K_PUP 0xD3
+#define K_PDN 0xD6
+#define K_F04 0xC5
+#define K_F05 0xC6
+#define K_F06 0xC7
 
 // meta
 #define K_NON 0x00
@@ -106,8 +115,8 @@ byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
     {K_C_L, K_CSB, K_G_L, K_A_L, HIGHR, K_SPC, K_SCL, K_OCB, K_OPR, K_OSB, K_EQU, K_FSL}
   },
   {
-    {K_BTK, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
-    {K_ESC, K_NON, K_NON, K_NON, K_NON, K_NON, SCRUP, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
+    {K_BTK, K_INS, K_DEL, K_HOM, K_END, K_PUP, K_PDN, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
+    {K_ESC, K_NON, K_F04, K_F05, K_F06, K_NON, SCRUP, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
     {K_S_L, K_NON, K_NON, K_NON, K_NON, K_NON, SCRDW, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
     {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, K_NON, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
   }
