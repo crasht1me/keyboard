@@ -93,8 +93,7 @@
 // meta
 #define K_NON 0x00
 #define FIRST_META_KEY 0xF0
-#define SCRUP 0xF1
-#define SCRDW 0xF2
+#define CTALD 0xF1
 #define HIGHR 0xFF
 
 #define DEBOUNCE_DELAY 17
@@ -116,9 +115,9 @@ byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
   },
   {
     {K_BTK, K_INS, K_DEL, K_HOM, K_END, K_PUP, K_PDN, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
-    {K_ESC, K_NON, K_F04, K_F05, K_F06, K_NON, SCRUP, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
-    {K_S_L, K_NON, K_NON, K_NON, K_NON, K_NON, SCRDW, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
-    {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, K_NON, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
+    {K_ESC, K_NON, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
+    {K_S_L, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
+    {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, CTALD, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
   }
 };
 
@@ -196,11 +195,10 @@ void press_key(byte row, byte col) {
         Keyboard.releaseAll();
         layout_level = 1;
         break;
-      case SCRUP:
-        Mouse.move(0, 0, 3);
-        break;
-      case SCRDW:
-        Mouse.move(0, 0, -3);
+      case CTALD:
+        Keyboard.press(K_C_L);
+        Keyboard.press(K_A_L);
+        Keyboard.press(K_DEL);
         break;
       default:
         break;
@@ -218,6 +216,9 @@ void release_key(byte row, byte col) {
       case HIGHR:
         Keyboard.releaseAll();
         layout_level = 0;
+        break;
+       case CTALD:
+        Keyboard.releaseAll();
         break;
       default:
         break;
