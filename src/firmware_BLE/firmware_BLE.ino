@@ -97,7 +97,7 @@
 
 #define DEBOUNCE_DELAY 17
 
-BleKeyboard bleKeyboard("Zadai muuuu", "Vesi", 100);
+BleKeyboard keyboard("Zadai muuuu", "Vesi", 100);
 
 const byte NUM_ROWS = 4;
 const byte NUM_COLS = 12;
@@ -137,12 +137,12 @@ bool key_states[NUM_ROWS][NUM_COLS] = {
 };
 
 void setup() {
-  bleKeyboard.begin();
+  keyboard.begin();
 }
 
 void loop() {
   scan_switches();
-  if (bleKeyboard.isConnected()) {
+  if (keyboard.isConnected()) {
     process_keys(); 
   }
   delay(DEBOUNCE_DELAY);
@@ -191,17 +191,17 @@ void press_key(byte row, byte col) {
   key_states[row][col] = true;
   bool is_normal_key = get_layout_code(row, col) < FIRST_META_KEY;
   if (is_normal_key) {
-    bleKeyboard.press(get_layout_code(row, col));
+    keyboard.press(get_layout_code(row, col));
   } else {
     switch (get_layout_code(row, col)) {
       case HIGHR:
-        bleKeyboard.releaseAll();
+        keyboard.releaseAll();
         layout_level = 1;
         break;
       case CTALD:
-        bleKeyboard.press(K_C_L);
-        bleKeyboard.press(K_A_L);
-        bleKeyboard.press(K_DEL);
+        keyboard.press(K_C_L);
+        keyboard.press(K_A_L);
+        keyboard.press(K_DEL);
         break;
       default:
         break;
@@ -213,15 +213,15 @@ void release_key(byte row, byte col) {
   key_states[row][col] = false;
   bool is_normal_key = get_layout_code(row, col) < FIRST_META_KEY;
   if (is_normal_key) {
-    bleKeyboard.release(get_layout_code(row, col));
+    keyboard.release(get_layout_code(row, col));
   } else {
     switch (get_layout_code(row, col)) {
       case HIGHR:
-        bleKeyboard.releaseAll();
+        keyboard.releaseAll();
         layout_level = 0;
         break;
        case CTALD:
-        bleKeyboard.releaseAll();
+        keyboard.releaseAll();
         break;
       default:
         break;
