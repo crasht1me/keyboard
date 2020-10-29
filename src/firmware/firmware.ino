@@ -1,4 +1,4 @@
-#include <BleKeyboard.h>
+#include <Keyboard.h>
 
 // symbols
 #define K_SPC 0x20 //space
@@ -97,15 +97,13 @@
 
 #define DEBOUNCE_DELAY 17
 
-BleKeyboard bleKeyboard("Zadai muuuu", "Vesi", 100);
-
 const byte NUM_ROWS = 4;
 const byte NUM_COLS = 12;
 const byte NUM_LAYOUT_LEVELS = 2;
 byte layout_level = 0;
 
-byte row_pins[NUM_ROWS] = {5, 18, 19, 21};
-byte col_pins[NUM_COLS] = {22, 23, 13, 12, 14, 27, 26, 25, 33, 32, 16, 17};
+byte row_pins[NUM_ROWS] = {A3, A2, A1, A0};
+byte col_pins[NUM_COLS] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 14, 15};
 
 byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
   {
@@ -137,14 +135,12 @@ bool key_states[NUM_ROWS][NUM_COLS] = {
 };
 
 void setup() {
-  bleKeyboard.begin();
+  Keyboard.begin();
 }
 
 void loop() {
   scan_switches();
-  if (bleKeyboard.isConnected()) {
-    process_keys(); 
-  }
+  process_keys();
   delay(DEBOUNCE_DELAY);
 }
 
@@ -191,17 +187,17 @@ void press_key(byte row, byte col) {
   key_states[row][col] = true;
   bool is_normal_key = get_layout_code(row, col) < FIRST_META_KEY;
   if (is_normal_key) {
-    bleKeyboard.press(get_layout_code(row, col));
+    Keyboard.press(get_layout_code(row, col));
   } else {
     switch (get_layout_code(row, col)) {
       case HIGHR:
-        bleKeyboard.releaseAll();
+        Keyboard.releaseAll();
         layout_level = 1;
         break;
       case CTALD:
-        bleKeyboard.press(K_C_L);
-        bleKeyboard.press(K_A_L);
-        bleKeyboard.press(K_DEL);
+        Keyboard.press(K_C_L);
+        Keyboard.press(K_A_L);
+        Keyboard.press(K_DEL);
         break;
       default:
         break;
@@ -213,15 +209,15 @@ void release_key(byte row, byte col) {
   key_states[row][col] = false;
   bool is_normal_key = get_layout_code(row, col) < FIRST_META_KEY;
   if (is_normal_key) {
-    bleKeyboard.release(get_layout_code(row, col));
+    Keyboard.release(get_layout_code(row, col));
   } else {
     switch (get_layout_code(row, col)) {
       case HIGHR:
-        bleKeyboard.releaseAll();
+        Keyboard.releaseAll();
         layout_level = 0;
         break;
        case CTALD:
-        bleKeyboard.releaseAll();
+        Keyboard.releaseAll();
         break;
       default:
         break;

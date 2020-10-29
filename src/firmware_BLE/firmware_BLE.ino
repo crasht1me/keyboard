@@ -107,6 +107,9 @@ byte layout_level = 0;
 byte row_pins[NUM_ROWS] = {5, 18, 19, 21};
 byte col_pins[NUM_COLS] = {22, 23, 13, 12, 14, 27, 26, 25, 33, 32, 16, 17};
 
+/*byte row_pins[NUM_ROWS] = {16, 17, 5, 18,};
+byte col_pins[NUM_COLS] = {19, 21, 22, 23, 13, 12, 14, 27, 26, 25, 33, 32};*/
+
 byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
   {
     {K_TAB, KEY_Q, KEY_W, KEY_F, KEY_P, KEY_B, KEY_J, KEY_L, KEY_U, KEY_Y, K_MIN, K_BKS},
