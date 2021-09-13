@@ -1,4 +1,6 @@
 #include <BleKeyboard.h>
+#include <esp_wifi.h>
+#include "driver/adc.h"
 
 // symbols
 #define K_SPC 0x20 //space
@@ -105,14 +107,14 @@ const byte NUM_LAYOUT_LEVELS = 2;
 byte layout_level = 0;
 
 // PCB v2 - working pins
-byte row_pins[NUM_ROWS] = {15, 2, 4, 16};
-byte col_pins[NUM_COLS] = {17, 5, 18, 19, 32, 33, 25, 26, 27, 14, 12, 13};
+/*byte row_pins[NUM_ROWS] = {15, 2, 4, 16};
+byte col_pins[NUM_COLS] = {17, 5, 18, 19, 32, 33, 25, 26, 27, 14, 12, 13};*/
 
 /*byte row_pins[NUM_ROWS] = {16, 17, 5, 18,};
 byte col_pins[NUM_COLS] = {19, 21, 22, 23, 13, 12, 14, 27, 26, 25, 33, 32};*/
 
-/*byte row_pins[NUM_ROWS] = {5, 18, 19, 21};
-byte col_pins[NUM_COLS] = {22, 23, 13, 12, 14, 27, 26, 25, 33, 32, 16, 17};*/
+byte row_pins[NUM_ROWS] = {5, 18, 19, 21};
+byte col_pins[NUM_COLS] = {22, 23, 13, 12, 14, 27, 26, 25, 33, 32, 16, 17};
 
 byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
   {
@@ -123,7 +125,7 @@ byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
   },
   {
     {K_BTK, K_INS, K_DEL, K_HOM, K_END, K_PUP, K_PDN, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
-    {K_ESC, K_NON, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
+    {K_ESC, K_BTK, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
     {K_S_L, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
     {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, CTALD, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
   }
@@ -144,14 +146,16 @@ bool key_states[NUM_ROWS][NUM_COLS] = {
 };
 
 void setup() {
+  init_battery_optimisations();
   keyboard.begin();
 }
 
 void loop() {
   scan_switches();
   if (keyboard.isConnected()) {
-    process_keys(); 
+    process_keys();
   }
+
   delay(DEBOUNCE_DELAY);
 }
 
@@ -175,6 +179,12 @@ void scan_switches() {
     // stop treating as output
     pinMode(row_pins[row], INPUT);
   }
+}
+
+void init_battery_optimisations() {
+  setCpuFrequencyMhz(80);
+  adc_power_off();
+  esp_wifi_stop();
 }
 
 void process_keys() {
