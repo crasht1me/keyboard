@@ -99,22 +99,22 @@
 
 #define DEBOUNCE_DELAY 17
 
-BleKeyboard keyboard("Zadai muuuu", "Vesi", 100);
+BleKeyboard keyboard("Zadai muuuu v2", "Vesi", 100);
 
 const byte NUM_ROWS = 4;
 const byte NUM_COLS = 12;
 const byte NUM_LAYOUT_LEVELS = 2;
 byte layout_level = 0;
 
-// PCB v2 - working pins
-/*byte row_pins[NUM_ROWS] = {15, 2, 4, 16};
-byte col_pins[NUM_COLS] = {32, 33, 25, 26, 27, 14, 12, 13, 19, 18, 5, 17};*/
+// PCB v3 - working pins
+byte row_pins[NUM_ROWS] = {15, 23, 4, 16};
+byte col_pins[NUM_COLS] = {32, 33, 25, 26, 27, 14, 12, 13, 19, 18, 5, 17};
 
 /*byte row_pins[NUM_ROWS] = {16, 17, 5, 18,};
 byte col_pins[NUM_COLS] = {19, 21, 22, 23, 13, 12, 14, 27, 26, 25, 33, 32};*/
 
-byte row_pins[NUM_ROWS] = {5, 18, 19, 21};
-byte col_pins[NUM_COLS] = {22, 23, 13, 12, 14, 27, 26, 25, 33, 32, 16, 17};
+/*byte row_pins[NUM_ROWS] = {5, 18, 19, 21};
+byte col_pins[NUM_COLS] = {22, 23, 13, 12, 14, 27, 26, 25, 33, 32, 16, 17};*/
 
 byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
   {

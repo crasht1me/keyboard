@@ -185,43 +185,39 @@ void process_keys() {
 
 void press_key(byte row, byte col) {
   key_states[row][col] = true;
-  bool is_normal_key = get_layout_code(row, col) < FIRST_META_KEY;
-  if (is_normal_key) {
-    Keyboard.press(get_layout_code(row, col));
-  } else {
-    switch (get_layout_code(row, col)) {
-      case HIGHR:
-        Keyboard.releaseAll();
-        layout_level = 1;
-        break;
-      case CTALD:
-        Keyboard.press(K_C_L);
-        Keyboard.press(K_A_L);
-        Keyboard.press(K_DEL);
-        break;
-      default:
-        break;
-    }
+    
+  byte actionCode = get_layout_code(row, col);
+  switch (actionCode) {
+    case HIGHR:
+      Keyboard.releaseAll();
+      layout_level = 1;
+      break;
+    case CTALD:
+      Keyboard.press(K_C_L);
+      Keyboard.press(K_A_L);
+      Keyboard.press(K_DEL);
+      break;
+    default:
+      Keyboard.press(actionCode);
+      break;
   }
 }
 
 void release_key(byte row, byte col) {
   key_states[row][col] = false;
-  bool is_normal_key = get_layout_code(row, col) < FIRST_META_KEY;
-  if (is_normal_key) {
-    Keyboard.release(get_layout_code(row, col));
-  } else {
-    switch (get_layout_code(row, col)) {
-      case HIGHR:
-        Keyboard.releaseAll();
-        layout_level = 0;
-        break;
-       case CTALD:
-        Keyboard.releaseAll();
-        break;
-      default:
-        break;
-    }
+
+  byte actionCode = get_layout_code(row, col);
+  switch (actionCode) {
+    case HIGHR:
+      Keyboard.releaseAll();
+      layout_level = 0;
+      break;
+    case CTALD:
+      Keyboard.releaseAll();
+      break;
+    default:
+      Keyboard.release(actionCode);
+      break;
   }
 }
 
