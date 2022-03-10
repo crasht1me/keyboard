@@ -26,10 +26,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="584.42167"
-     inkscape:cy="727.31372"
+     inkscape:cx="712.40222"
+     inkscape:cy="600.79371"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -48,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -109,6 +109,20 @@
        id="rect5006-2-2-1-7-9"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccc" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:0.3251729;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect833"
+       width="37.655125"
+       height="5.3453903"
+       x="-39.524628"
+       y="86.741646" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:0.3251729;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect833-3"
+       width="37.718414"
+       height="5.3453903"
+       x="97.835663"
+       y="86.741646" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -116,41 +130,52 @@
      inkscape:label="components"
      transform="translate(122.37515,20.142648)">
     <g
-       style="display:inline"
-       id="g1941"
-       transform="rotate(-90,501.31037,539.44982)">
+       id="g878"
+       transform="translate(-2.3756327,-12.878951)">
       <rect
-         transform="scale(-1)"
-         y="-131.34514"
-         x="-920.48676"
-         height="89.906944"
-         width="69.906944"
-         id="rect885"
-         style="display:inline;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.09305344;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <text
-         id="text1933"
-         y="82.603783"
-         x="865.28131"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
-           style="stroke-width:0.26458332"
+         y="99.620598"
+         x="0.55295891"
+         height="79.674828"
+         width="99.674828"
+         id="rect869"
+         style="opacity:1;fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:0.3251729;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <g
+         transform="rotate(-90,494.495,530.49629)"
+         id="g1941"
+         style="display:inline">
+        <rect
+           style="display:inline;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.09305344;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect885"
+           width="69.906944"
+           height="89.906944"
+           x="-920.48676"
+           y="-131.34514"
+           transform="scale(-1)" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="865.28131"
            y="82.603783"
-           x="865.28131"
-           id="tspan1931"
-           sodipodi:role="line">357090</tspan><tspan
-           id="tspan1935"
-           style="stroke-width:0.26458332"
-           y="95.832947"
-           x="865.28131"
-           sodipodi:role="line">battery</tspan></text>
+           id="text1933"><tspan
+             sodipodi:role="line"
+             id="tspan1931"
+             x="865.28131"
+             y="82.603783"
+             style="stroke-width:0.26458332">357090</tspan><tspan
+             sodipodi:role="line"
+             x="865.28131"
+             y="95.832947"
+             style="stroke-width:0.26458332"
+             id="tspan1935">battery</tspan></text>
+      </g>
     </g>
     <rect
        style="display:inline;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.10000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect6043"
        width="23.900003"
        height="17.9"
-       x="86.619377"
-       y="-57.000217"
+       x="171.61108"
+       y="-56.198402"
        transform="rotate(90)" />
     <rect
        style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.09999999;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
