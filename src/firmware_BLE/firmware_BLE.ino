@@ -99,6 +99,10 @@
 
 #define DEBOUNCE_DELAY 17
 
+#define BATTERY_GAUGE_PIN 35
+#define LED_BATTERY_PIN_L 22
+#define LED_BATTERY_PIN_R 21
+
 BleKeyboard keyboard("Zadai muuuu v2", "Vesi", 100);
 
 const byte NUM_ROWS = 4;
@@ -146,8 +150,15 @@ bool key_states[NUM_ROWS][NUM_COLS] = {
 };
 
 void setup() {
+  pinMode(BATTERY_GAUGE_PIN, INPUT);
+  pinMode(LED_BATTERY_PIN_L, OUTPUT);
+  pinMode(LED_BATTERY_PIN_R, OUTPUT);
   init_battery_optimisations();
   keyboard.begin();
+  Serial.begin(9600);
+  Serial.println("Started.");
+  digitalWrite(LED_BATTERY_PIN_L, HIGH);
+  digitalWrite(LED_BATTERY_PIN_R, HIGH);
 }
 
 void loop() {
@@ -155,6 +166,11 @@ void loop() {
   if (keyboard.isConnected()) {
     process_keys();
   }
+
+   float batteryInput = analogRead(BATTERY_GAUGE_PIN);
+   float input_voltage = (batteryInput * 4.2) / 4095.0;
+   float battery_percentage = map(input_voltage, 3.3f, 4.2f, 0, 100);
+   Serial.println((String)"battery input [0-4095]: " + batteryInput + (String)"; battery voltage [0-4.2V]: " + input_voltage + (String)"; % [0-100]: " + battery_percentage);
 
   delay(DEBOUNCE_DELAY);
 }
@@ -183,7 +199,7 @@ void scan_switches() {
 
 void init_battery_optimisations() {
   setCpuFrequencyMhz(80);
-  adc_power_off();
+  //adc_power_off();
   esp_wifi_stop();
 }
 
