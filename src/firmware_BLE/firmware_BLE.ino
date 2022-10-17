@@ -95,15 +95,16 @@
 #define K_NON 0x00
 #define FIRST_META_KEY 0xF0
 #define CTALD 0xF1 //Ctrl Alt Delete
+#define BATLV 0xF2 //battery level
 #define HIGHR 0xFF
 
-#define DEBOUNCE_DELAY 17
+#define DEBOUNCE_DELAY 15
 
 #define BATTERY_GAUGE_PIN 35
 #define LED_BATTERY_PIN_L 22
 #define LED_BATTERY_PIN_R 21
 
-BleKeyboard keyboard("Zadai muuuu v2", "Vesi", 100);
+BleKeyboard keyboard("Zadai muuu 2.0", "Vesi", 100);
 
 const byte NUM_ROWS = 4;
 const byte NUM_COLS = 12;
@@ -130,7 +131,7 @@ byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
   {
     {K_BTK, K_INS, K_DEL, K_HOM, K_END, K_PUP, K_PDN, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
     {K_ESC, K_BTK, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
-    {K_S_L, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
+    {K_S_L, K_NON, K_NON, K_NON, BATLV, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
     {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, CTALD, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
   }
 };
@@ -157,8 +158,6 @@ void setup() {
   keyboard.begin();
   Serial.begin(9600);
   Serial.println("Started.");
-  digitalWrite(LED_BATTERY_PIN_L, HIGH);
-  digitalWrite(LED_BATTERY_PIN_R, HIGH);
 }
 
 void loop() {
@@ -167,12 +166,17 @@ void loop() {
     process_keys();
   }
 
-   float batteryInput = analogRead(BATTERY_GAUGE_PIN);
-   float input_voltage = (batteryInput * 4.2) / 4095.0;
-   float battery_percentage = map(input_voltage, 3.3f, 4.2f, 0, 100);
-   Serial.println((String)"battery input [0-4095]: " + batteryInput + (String)"; battery voltage [0-4.2V]: " + input_voltage + (String)"; % [0-100]: " + battery_percentage);
-
   delay(DEBOUNCE_DELAY);
+}
+
+int measure_battery() {
+  float batteryInput = analogRead(BATTERY_GAUGE_PIN);
+  float input_voltage = (batteryInput * 4.2) / 4095.0;
+  int battery_percentage = map(input_voltage, 3.3f, 4.2f, 0, 100);
+  //Serial.println((String)"battery voltage [0-4.2V]: " + input_voltage + (String)"; % [0-100]: " + battery_percentage);
+  //digitalWrite(LED_BATTERY_PIN_L, HIGH);
+  //digitalWrite(LED_BATTERY_PIN_R, HIGH);
+  return battery_percentage;
 }
 
 void scan_switches() {
