@@ -98,28 +98,26 @@
 #define BATLV 0xF2 //battery level
 #define HIGHR 0xFF
 
-#define DEBOUNCE_DELAY 15
-
 #define BATTERY_GAUGE_PIN 35
 #define LED_BATTERY_PIN_L 22
 #define LED_BATTERY_PIN_R 21
 
-BleKeyboard keyboard("Zadai muuu 2.0", "Vesi", 100);
+#define DEBOUNCE_DELAY 15
+#define LEDS_DURATION_MS 300
+
+BleKeyboard keyboard("Аметист", "Vesi", 100);
 
 const byte NUM_ROWS = 4;
 const byte NUM_COLS = 12;
 const byte NUM_LAYOUT_LEVELS = 2;
 byte layout_level = 0;
 
+bool ledsOn = false;
+unsigned long ledsOnStartTime;
+
 // PCB v3 - working pins
 byte row_pins[NUM_ROWS] = {15, 23, 4, 16};
 byte col_pins[NUM_COLS] = {32, 33, 25, 26, 27, 14, 12, 13, 19, 18, 5, 17};
-
-/*byte row_pins[NUM_ROWS] = {16, 17, 5, 18,};
-byte col_pins[NUM_COLS] = {19, 21, 22, 23, 13, 12, 14, 27, 26, 25, 33, 32};*/
-
-/*byte row_pins[NUM_ROWS] = {5, 18, 19, 21};
-byte col_pins[NUM_COLS] = {22, 23, 13, 12, 14, 27, 26, 25, 33, 32, 16, 17};*/
 
 byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
   {
@@ -158,6 +156,8 @@ void setup() {
   keyboard.begin();
   Serial.begin(9600);
   Serial.println("Started.");
+
+  turn_leds_on();
 }
 
 void loop() {
@@ -165,6 +165,7 @@ void loop() {
   if (keyboard.isConnected()) {
     process_keys();
   }
+  tick_battery_leds();
 
   delay(DEBOUNCE_DELAY);
 }
@@ -174,9 +175,22 @@ int measure_battery() {
   float input_voltage = (batteryInput * 4.2) / 4095.0;
   int battery_percentage = map(input_voltage, 3.3f, 4.2f, 0, 100);
   //Serial.println((String)"battery voltage [0-4.2V]: " + input_voltage + (String)"; % [0-100]: " + battery_percentage);
-  //digitalWrite(LED_BATTERY_PIN_L, HIGH);
-  //digitalWrite(LED_BATTERY_PIN_R, HIGH);
   return battery_percentage;
+}
+
+void turn_leds_on() {
+  ledsOn = true;
+  ledsOnStartTime = millis();
+  digitalWrite(LED_BATTERY_PIN_L, HIGH);
+  digitalWrite(LED_BATTERY_PIN_R, HIGH);
+}
+
+void tick_battery_leds() {
+  if (ledsOn && (ledsOnStartTime + LEDS_DURATION_MS < millis())) {
+    digitalWrite(LED_BATTERY_PIN_L, LOW);
+    digitalWrite(LED_BATTERY_PIN_R, LOW);
+    ledsOn = false;
+  }
 }
 
 void scan_switches() {
