@@ -105,7 +105,7 @@
 #define DEBOUNCE_DELAY 15
 #define LEDS_DURATION_MS 300
 
-BleKeyboard keyboard("Аметист", "Vesi", 100);
+BleKeyboard keyboard("Изумруд", "Vesi", 100);
 
 const byte NUM_ROWS = 4;
 const byte NUM_COLS = 12;
@@ -113,7 +113,7 @@ const byte NUM_LAYOUT_LEVELS = 2;
 byte layout_level = 0;
 
 bool ledsOn = false;
-unsigned long ledsOnStartTime;
+unsigned long ledsOnEndTime;
 
 // PCB v3 - working pins
 byte row_pins[NUM_ROWS] = {15, 23, 4, 16};
@@ -157,7 +157,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Started.");
 
-  turn_leds_on();
+  turn_leds_on_for(LEDS_DURATION_MS);
 }
 
 void loop() {
@@ -170,23 +170,26 @@ void loop() {
   delay(DEBOUNCE_DELAY);
 }
 
-int measure_battery() {
+int get_battery_percent() {
   float batteryInput = analogRead(BATTERY_GAUGE_PIN);
   float input_voltage = (batteryInput * 4.2) / 4095.0;
-  int battery_percentage = map(input_voltage, 3.3f, 4.2f, 0, 100);
-  //Serial.println((String)"battery voltage [0-4.2V]: " + input_voltage + (String)"; % [0-100]: " + battery_percentage);
+  int input_voltage_millivolts = input_voltage * 1000;  
+  int battery_percentage = round(map(input_voltage_millivolts, 3300, 4200, 0, 100));
+  //Serial.println((String)"bat input: " + batteryInput + (String)"; battery voltage [0-4.2V]: " + input_voltage + (String)"; % [0-100]: " + battery_percentage);
+  keyboard.setBatteryLevel(battery_percentage);
   return battery_percentage;
 }
 
-void turn_leds_on() {
+void turn_leds_on_for(int millisOn) {
+  if (millisOn < 0) { return; }
   ledsOn = true;
-  ledsOnStartTime = millis();
+  ledsOnEndTime = millis() + millisOn;
   digitalWrite(LED_BATTERY_PIN_L, HIGH);
   digitalWrite(LED_BATTERY_PIN_R, HIGH);
 }
 
 void tick_battery_leds() {
-  if (ledsOn && (ledsOnStartTime + LEDS_DURATION_MS < millis())) {
+  if (ledsOn && (ledsOnEndTime < millis())) {
     digitalWrite(LED_BATTERY_PIN_L, LOW);
     digitalWrite(LED_BATTERY_PIN_R, LOW);
     ledsOn = false;
@@ -254,6 +257,9 @@ void press_key(byte row, byte col) {
         keyboard.press(K_A_L);
         keyboard.press(K_DEL);
         break;
+      case BATLV:
+        turn_leds_on_for(get_battery_percent() * 10);
+        break;
       default:
         break;
     }
@@ -271,8 +277,10 @@ void release_key(byte row, byte col) {
         keyboard.releaseAll();
         layout_level = 0;
         break;
-       case CTALD:
+      case CTALD:
         keyboard.releaseAll();
+        break;
+      case BATLV:
         break;
       default:
         break;
