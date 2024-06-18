@@ -16,7 +16,7 @@
 #define K_EQU 0x3D //=
 #define K_OSB 0x5B //[
 #define K_CSB 0x5D //]
-#define K_BSL 0x5C //backslash
+#define K_BSL 0x5C //backslash/
 #define K_OCB 0x7B //{
 #define K_CCB 0x7D //}
 #define K_BTK 0x60 //`backtick
@@ -62,14 +62,14 @@
 #define KEY_9 0x39
 
 // modifiers
-#define K_C_L 0x80
-#define K_S_L 0x81
-#define K_A_L 0x82
-#define K_G_L 0x83
+#define K_C_L 0x80 //LEFT control
+#define K_S_L 0x81 // Left shift
+#define K_A_L 0x82 //Left Alt
+#define K_G_L 0x83 //GUI LEFT
 #define K_C_R 0x84
 #define K_S_R 0x85
 #define K_A_R 0x86
-#define K_G_R 0x87
+#define K_G_R 0x87 //GUI Right
 
 // non-printable
 #define K_ETR 0xB0 //enter
@@ -86,17 +86,37 @@
 #define K_HOM 0xD2 //home
 #define K_END 0xD5
 #define K_PUP 0xD3 //page up
-#define K_PDN 0xD6 //page down
+#define K_PDN 0xD6 //page down/
+
+#define K_F01 0xC2
+#define K_F02 0xC3
+#define K_F03 0xC4
 #define K_F04 0xC5
 #define K_F05 0xC6
 #define K_F06 0xC7
+#define K_F07 0xC8
+#define K_F08 0xC9
+#define K_F09 0xCA
+#define K_F10 0xCB
+#define K_F11 0xCC
+#define K_F12 0xCD
 
 // meta
 #define K_NON 0x00
 #define FIRST_META_KEY 0xF0
 #define CTALD 0xF1 //Ctrl Alt Delete
 #define BATLV 0xF2 //battery level
-#define HIGHR 0xFF
+#define CAF4 0xF3 //Ctrl Alt F4
+
+#define CTINS 0xF4 //Ctrl Insert
+#define SHINS 0xF5 //Shift Insert
+
+#define COPY 0xF6 //Ctrl + C
+#define PASTE 0xF7 //Ctrl + P
+#define CUT 0xF8 //Ctrl + X
+
+#define LOWR 0xFE //low shift
+#define HIGHR 0xFF //high shift
 
 #define BATTERY_GAUGE_PIN 35
 #define LED_BATTERY_PIN_L 22
@@ -105,11 +125,14 @@
 #define DEBOUNCE_DELAY 15
 #define LEDS_DURATION_MS 300
 
-BleKeyboard keyboard("Изумруд", "Vesi", 100);
+std::string KEYBOARD_NAME= "Keyboard";
+std::string MANUFACTURER = "Vesi";
+
+BleKeyboard keyboard(KEYBOARD_NAME.c_str(), MANUFACTURER.c_str(), 100);
 
 const byte NUM_ROWS = 4;
 const byte NUM_COLS = 12;
-const byte NUM_LAYOUT_LEVELS = 2;
+const byte NUM_LAYOUT_LEVELS = 4;
 byte layout_level = 0;
 
 bool ledsOn = false;
@@ -119,19 +142,33 @@ unsigned long ledsOnEndTime;
 byte row_pins[NUM_ROWS] = {15, 23, 4, 16};
 byte col_pins[NUM_COLS] = {32, 33, 25, 26, 27, 14, 12, 13, 19, 18, 5, 17};
 
-byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
+byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NpUM_COLS] = {
   {
-    {K_TAB, KEY_Q, KEY_W, KEY_F, KEY_P, KEY_B, KEY_J, KEY_L, KEY_U, KEY_Y, K_MIN, K_BKS},
-    {K_ESC, KEY_A, KEY_R, KEY_S, KEY_T, KEY_G, KEY_K, KEY_N, KEY_E, KEY_I, KEY_O, K_ETR},
-    {K_S_L, KEY_Z, KEY_X, KEY_C, KEY_V, KEY_D, KEY_M, KEY_H, K_CMA, K_DOT, K_DQO, K_S_R},
-    {K_C_L, K_CSB, K_G_L, K_A_L, HIGHR, K_SPC, K_SCL, K_OCB, K_OPR, K_OSB, K_EQU, K_FSL}
+    {K_ESC, K_SQO, K_CMA, K_DOT, KEY_P, KEY_Y, KEY_F, KEY_G, KEY_C, KEY_R, KEY_L, K_BKS},
+    {K_TAB, KEY_A, KEY_O, KEY_E, KEY_U, KEY_I, KEY_D, KEY_H, KEY_T, KEY_N, KEY_S, K_ETR},
+    {K_S_L, K_SCL, KEY_Q, KEY_J, KEY_K, KEY_X, KEY_B, KEY_M, KEY_W, KEY_V, KEY_Z, K_DEL},
+    {K_C_L, K_A_L, K_G_L, K_G_L, HIGHR, K_SPC, K_SPC, LOWR, K_LFT, K_AUP, K_DWN, K_RHT}
+  },
+  {
+    {K_BTK, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
+    {, K_BTK, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
+    {K_S_L, K_NON, K_NON, K_NON, BATLV, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_HOM}, 
+    {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, CTALD, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
   },
   {
     {K_BTK, K_INS, K_DEL, K_HOM, K_END, K_PUP, K_PDN, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
     {K_ESC, K_BTK, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
+    {K_S_L, K_NON, K_NON, K_NON, BATLV, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_END},
+    {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, CTALD, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
+  },
+
+   {
+    {K_BTK, K_INS, K_DEL, K_HOM, K_END, K_PUP, K_PDN, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
+    {K_ESC, K_BTK, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
     {K_S_L, K_NON, K_NON, K_NON, BATLV, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
     {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, CTALD, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
-  }
+  },
+
 };
 
 bool pressed_switches[NUM_ROWS][NUM_COLS] = {
@@ -274,6 +311,10 @@ void release_key(byte row, byte col) {
   } else {
     switch (get_layout_code(row, col)) {
       case HIGHR:
+        keyboard.releaseAll();
+        layout_level = 0;
+        break;
+      case LOWR:
         keyboard.releaseAll();
         layout_level = 0;
         break;
