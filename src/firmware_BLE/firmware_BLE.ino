@@ -10,16 +10,30 @@
 #define K_CPR 0x29 //)
 #define K_CMA 0x2C //,
 #define K_MIN 0x2D //-
+#define K_UND 0x5F //_
 #define K_DOT 0x2E
 #define K_FSL 0x2F //forward slash
 #define K_SCL 0x3B //;
 #define K_EQU 0x3D //=
+#define K_PLS 0x2B //+
 #define K_OSB 0x5B //[
 #define K_CSB 0x5D //]
 #define K_BSL 0x5C //backslash/
 #define K_OCB 0x7B //{
 #define K_CCB 0x7D //}
 #define K_BTK 0x60 //`backtick
+#define K_TLD 0x7E//~ tilde
+#define K_PIP 0x7C // | pipe
+
+#define K_ECL 0x21 // !
+#define K_ATT 0x40 // @
+#define K_SHP 0x23 // #
+#define K_USD 0x24 // $
+#define K_PRC 0x25 // %
+#define K_PWR 0x5E // ^
+#define K_AND 0x26 // &
+#define K_MLT 0x2A // *
+
 
 // letters
 #define KEY_A 0x61
@@ -101,19 +115,30 @@
 #define K_F11 0xCC
 #define K_F12 0xCD
 
+//media
+#define K_VUP 0xFA
+#define K_VDW 0xFB
+
+#define K_VMU 0xFC
+#define K_PLY 0xFD
+
 // meta
 #define K_NON 0x00
 #define FIRST_META_KEY 0xF0
 #define CTALD 0xF1 //Ctrl Alt Delete
 #define BATLV 0xF2 //battery level
-#define CAF4 0xF3 //Ctrl Alt F4
-
-#define CTINS 0xF4 //Ctrl Insert
-#define SHINS 0xF5 //Shift Insert
+#define CAF4 0xF3 // Alt F4
 
 #define COPY 0xF6 //Ctrl + C
 #define PASTE 0xF7 //Ctrl + P
 #define CUT 0xF8 //Ctrl + X
+#define UNDO 0xF9 //Ctrl + X
+
+#define COPY_TER 0xF4 //Ctrl + INS
+#define PASTE_TER 0xF5 //shift + ins
+
+
+
 
 #define LOWR 0xFE //low shift
 #define HIGHR 0xFF //high shift
@@ -142,31 +167,31 @@ unsigned long ledsOnEndTime;
 byte row_pins[NUM_ROWS] = {15, 23, 4, 16};
 byte col_pins[NUM_COLS] = {32, 33, 25, 26, 27, 14, 12, 13, 19, 18, 5, 17};
 
-byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NpUM_COLS] = {
+byte layout[NUM_LAYOUT_LEVELS][NUM_ROWS][NUM_COLS] = {
   {
     {K_ESC, K_SQO, K_CMA, K_DOT, KEY_P, KEY_Y, KEY_F, KEY_G, KEY_C, KEY_R, KEY_L, K_BKS},
     {K_TAB, KEY_A, KEY_O, KEY_E, KEY_U, KEY_I, KEY_D, KEY_H, KEY_T, KEY_N, KEY_S, K_ETR},
     {K_S_L, K_SCL, KEY_Q, KEY_J, KEY_K, KEY_X, KEY_B, KEY_M, KEY_W, KEY_V, KEY_Z, K_DEL},
-    {K_C_L, K_A_L, K_G_L, K_G_L, HIGHR, K_SPC, K_SPC, LOWR, K_LFT, K_AUP, K_DWN, K_RHT}
+    {K_C_L, K_G_L, K_A_L, K_A_L, HIGHR, K_SPC, K_SPC, LOWR, K_LFT, K_AUP, K_DWN, K_RHT}
   },
   {
-    {K_BTK, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
-    {, K_BTK, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
-    {K_S_L, K_NON, K_NON, K_NON, BATLV, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_HOM}, 
-    {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, CTALD, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
+    {K_BTK, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, K_DEL},
+    {K_TAB, UNDO, CUT, COPY_TER, PASTE_TER, K_NON, K_NON, K_MIN, K_EQU, K_OCB, K_CCB, K_BSL},
+    {K_S_L, K_NON, K_NON, COPY, PASTE, K_NON, K_NON, K_NON, K_NON,K_NON, K_NON, K_NON}, 
+    {K_C_L,  K_G_L, K_A_L, K_A_L, HIGHR, K_SPC, K_SPC, LOWR, K_PLY, K_VUP, K_VDW, K_VMU}
   },
   {
-    {K_BTK, K_INS, K_DEL, K_HOM, K_END, K_PUP, K_PDN, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
-    {K_ESC, K_BTK, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
-    {K_S_L, K_NON, K_NON, K_NON, BATLV, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_END},
-    {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, CTALD, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
+    {K_TLD, K_ECL, K_ATT, K_SHP, K_USD, K_PRC, K_PDN, K_PWR, K_AND, K_MLT, K_OPR, K_CPR},
+    {K_TAB, K_NON, K_HOM, K_AUP, K_END, K_NON, K_NON, K_UND, K_PLS, K_OSB, K_CSB, K_FSL},
+    {K_S_L, K_NON, K_LFT, K_DWN, K_RHT, K_NON, K_NON, K_NON, K_NON, K_NON,K_NON, K_NON},
+    {K_C_L, K_G_L, K_A_L, K_A_L, HIGHR, K_SPC, K_SPC, LOWR, K_NON, K_NON,K_NON,K_NON}
   },
 
    {
-    {K_BTK, K_INS, K_DEL, K_HOM, K_END, K_PUP, K_PDN, KEY_7, KEY_8, KEY_9, K_BSL, K_BKS},
-    {K_ESC, K_BTK, K_F04, K_F05, K_F06, K_NON, K_NON, KEY_4, KEY_5, KEY_6, K_SQO, K_ETR},
-    {K_S_L, K_NON, K_NON, K_NON, BATLV, K_NON, K_NON, KEY_1, KEY_2, KEY_3, K_AUP, K_S_R},
-    {K_C_L, K_NON, K_G_L, K_A_L, HIGHR, K_SPC, CTALD, K_CPS, KEY_0, K_LFT, K_DWN, K_RHT}
+    {KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9,KEY_F10, KEY_F11, KEY_F12},
+    {K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_PIP},
+    {K_S_L, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON, K_NON},
+    {CTALD,  CAF4, K_A_L, K_A_L, HIGHR, K_SPC, K_SPC, LOWR, K_NON, K_NON, K_NON, K_NON}
   },
 
 };
@@ -287,13 +312,75 @@ void press_key(byte row, byte col) {
     switch (get_layout_code(row, col)) {
       case HIGHR:
         keyboard.releaseAll();
-        layout_level = 1;
+        if (key_states[3][7] == true)
+          layout_level = 3;
+        else
+          layout_level = 1;
         break;
+      case LOWR:
+        keyboard.releaseAll();
+        if (key_states[3][4] == true)
+          layout_level = 3;
+        else
+          layout_level = 2;
+      break;
       case CTALD:
         keyboard.press(K_C_L);
         keyboard.press(K_A_L);
         keyboard.press(K_DEL);
         break;
+
+      case CAF4:
+        keyboard.press(K_A_L);
+        keyboard.press(K_F04);
+        break;
+
+      case COPY_TER:
+        keyboard.press(K_C_L);
+        keyboard.press(K_INS);
+        break;
+
+      case PASTE_TER:
+        keyboard.press(K_S_L);
+        keyboard.press(K_INS);
+        break;
+      
+      case COPY:
+        keyboard.press(K_C_L);
+        keyboard.press(KEY_C);
+        break;
+
+      case PASTE:
+        keyboard.press(K_C_L);
+        keyboard.press(KEY_V);
+        break;
+
+      case CUT:
+        keyboard.press(K_C_L);
+        keyboard.press(KEY_X);
+        break;
+
+      case UNDO:
+        keyboard.press(K_C_L);
+        keyboard.press(KEY_Z);
+        break;
+      
+      case K_VUP:
+       keyboard.write(KEY_MEDIA_VOLUME_UP);
+       break;
+
+      case K_VDW:
+       keyboard.write(KEY_MEDIA_VOLUME_DOWN);
+       break;
+
+      case K_VMU:
+       keyboard.write(KEY_MEDIA_MUTE);
+       break;
+
+      case K_PLY:
+       keyboard.write(KEY_MEDIA_PLAY_PAUSE);
+       break;
+
       case BATLV:
         turn_leds_on_for(get_battery_percent() * 10);
         break;
@@ -312,18 +399,23 @@ void release_key(byte row, byte col) {
     switch (get_layout_code(row, col)) {
       case HIGHR:
         keyboard.releaseAll();
-        layout_level = 0;
+        if (key_states[3][7] == true)
+          layout_level = 2;
+        else
+          layout_level = 0;
+        
         break;
       case LOWR:
         keyboard.releaseAll();
-        layout_level = 0;
-        break;
-      case CTALD:
-        keyboard.releaseAll();
+        if (key_states[3][4] == true)
+          layout_level = 1;
+        else
+          layout_level = 0;
         break;
       case BATLV:
         break;
       default:
+        keyboard.releaseAll();
         break;
     }
   }
